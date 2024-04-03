@@ -1,0 +1,48 @@
+name: Comment on opened issues
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  # debug:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Debug
+  #       run: |
+  #         echo "${{ toJson(github.event) }}"
+  #         echo "${{ contains(github.event.issue.body, '🐲') }}"
+  #         echo "${{ contains(github.event.issue.body, '🐲') == 'true' }}"
+
+  comment:
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Comment on issue
+        if: |
+          contains(github.event.issue.body, '🐲')
+        run: |
+          BODY="👋 @${{ github.actor }}
+
+          Thanks for opening this issue! 🎉"
+          if [ "${{ github.event.act }}" == "true" ]; then
+            echo "::debug::${BODY}"
+            echo "::debug::This is a local run, skipping to comment."
+            exit 0
+          fi
+
+          gh issue comment ${{ github.event.issue.number }} \
+            --body "${BODY}" \
+            --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eo pipefail
+
+gh act issues --workflows .github/workflows/issue_opened.yml \
+  --eventpath .act/issue.opened.json \
+  --secret GITHUB_TOKEN="$(gh auth token)" --secret GH_TOKEN="$(gh auth token)" \
+  --platform ubuntu-latest=catthehacker/ubuntu:act-latest \
+  --rm

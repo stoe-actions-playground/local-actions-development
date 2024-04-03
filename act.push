@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eo pipefail
+
+mkdir -p .act/tmp/artifacts
+
+ACTIONS_RUNTIME_URL=http://host.docker.internal:4322/ gh act push --workflows .github/workflows/push.yml \
+  --secret GITHUB_TOKEN="$(gh auth token)" --secret GH_TOKEN="$(gh auth token)" \
+  --artifact-server-addr "[::0]" \
+  --artifact-server-port 4322 \
+  --artifact-server-path .act/tmp/artifacts \
+  --platform ubuntu-latest=catthehacker/ubuntu:full-latest \
+  --rm

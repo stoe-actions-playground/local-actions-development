@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eo pipefail
+
+gh act workflow_dispatch --workflows .github/workflows/workflow_dispatch.yml \
+  --input-file .act/.input \
+  --secret GITHUB_TOKEN="$(gh auth token)" --secret GH_TOKEN="$(gh auth token)" \
+  --platform ubuntu-latest=catthehacker/ubuntu:act-latest \
+  --rm
